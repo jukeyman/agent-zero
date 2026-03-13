@@ -161,6 +161,10 @@ docker run -p 50001:80 agent0ai/agent-zero
 | [Architecture](./docs/architecture.md) | System design and components |
 | [Contributing](./docs/contribution.md) | How to contribute |
 | [Troubleshooting](./docs/troubleshooting.md) | Common issues and their solutions |
+| [Capabilities + Enhancement Guide](./docs/capabilities-and-enhancement-guide.md) | Full capability list and improvement roadmap |
+| [Master Integration Env Setup](./docs/integrations-master-env-setup.md) | Secure setup for all requested integration environment variables |
+| [Evergreen Self-Update Protocol](./docs/evergreen-self-update-protocol.md) | Continuous live-verification protocol for tools, versions, and capabilities |
+| [Deploy and Use Agent Zero](./docs/deploy-and-use-agent-zero.md) | Practical upload/deploy guide to run your customized Agent Zero |
 
 
 ## 🎯 Changelog

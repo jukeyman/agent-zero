@@ -28,3 +28,8 @@ Contributions to improve Agent Zero are very welcome!  This guide outlines how t
 ## Documentation Stack
 
 - The documentation is built using Markdown. We appreciate your contributions even if you don't know Markdown, and look forward to improve Agent Zero for everyone's benefit.
+## Build Process Governance
+
+- For standardized build and delivery process requirements that should be applied broadly, follow [RJ Business Solutions — Supreme Global Agent Rules](rj-business-solutions-global-rules.md).
+- This document is stored in-repo so contributors can reference one canonical policy for environment, architecture, security, testing, deployment, and response workflows.
+- For recurring capability/version refresh cycles, use the [Evergreen Self-Update Protocol](evergreen-self-update-protocol.md).

@@ -9,6 +9,11 @@ To begin with Agent Zero, follow the links below for detailed guides on various 
 - **[Architecture Overview](architecture.md):** Understand the internal workings of the framework.
 - **[Contributing](contribution.md):** Learn how to contribute to the Agent Zero project.
 - **[Troubleshooting and FAQ](troubleshooting.md):** Find answers to common issues and questions.
+- **[RJ Business Solutions Global Rules](rj-business-solutions-global-rules.md):** Shared build-process governance policy for end-to-end delivery standards.
+- **[Agent Zero Capabilities + Enhancement Guide](capabilities-and-enhancement-guide.md):** Complete capability inventory and practical roadmap for improving Agent Zero.
+- **[Master Integration Env Setup](integrations-master-env-setup.md):** Securely configure all requested integration variables with a redacted template.
+- **[Evergreen Self-Update Protocol](evergreen-self-update-protocol.md):** Runtime self-update workflow for continuous capability and version freshness.
+- **[Deploy and Use Agent Zero](deploy-and-use-agent-zero.md):** Step-by-step upload, deploy, and access guide for your customized Agent Zero instance.
 
 ### Your experience with Agent Zero starts now!
 
@@ -65,3 +70,8 @@ To begin with Agent Zero, follow the links below for detailed guides on various 
 - [Troubleshooting and FAQ](troubleshooting.md)
   - [Frequently Asked Questions](troubleshooting.md#frequently-asked-questions)
   - [Troubleshooting](troubleshooting.md#troubleshooting)
+- [RJ Business Solutions Global Rules](rj-business-solutions-global-rules.md)
+- [Agent Zero Capabilities + Enhancement Guide](capabilities-and-enhancement-guide.md)
+- [Master Integration Env Setup](integrations-master-env-setup.md)
+- [Evergreen Self-Update Protocol](evergreen-self-update-protocol.md)
+- [Deploy and Use Agent Zero](deploy-and-use-agent-zero.md)

@@ -10,12 +10,18 @@ KEY_AUTH_PASSWORD = "AUTH_PASSWORD"
 KEY_RFC_PASSWORD = "RFC_PASSWORD"
 KEY_ROOT_PASSWORD = "ROOT_PASSWORD"
 
+PRIMARY_ENV_FILE = ".env"
+INTEGRATIONS_ENV_FILE = ".env.integrations.local"
+
 def load_dotenv():
-    _load_dotenv(get_dotenv_file_path(), override=True)
+    # Load primary settings first
+    _load_dotenv(get_abs_path(PRIMARY_ENV_FILE), override=True)
+    # Then load optional integrations file to make external services available without polluting .env
+    _load_dotenv(get_abs_path(INTEGRATIONS_ENV_FILE), override=True)
 
 
 def get_dotenv_file_path():
-    return get_abs_path(".env")
+    return get_abs_path(PRIMARY_ENV_FILE)
 
 def get_dotenv_value(key: str, default: Any = None):
     # load_dotenv()       

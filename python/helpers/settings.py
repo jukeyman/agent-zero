@@ -49,6 +49,12 @@ class Settings(TypedDict):
     browser_model_vision: bool
     browser_model_kwargs: dict[str, str]
 
+    model_routing_primary: str
+    model_routing_image: str
+    model_routing_video: str
+    model_routing_policy: str
+    rj_custom_mode: bool
+
     agent_prompts_subdir: str
     agent_memory_subdir: str
     agent_knowledge_subdir: str
@@ -446,6 +452,50 @@ def convert_out(settings: Settings) -> SettingsOutput:
         "title": "Web Browser Model",
         "description": "Settings for the web browser model. Agent Zero uses <a href='https://github.com/browser-use/browser-use' target='_blank'>browser-use</a> agentic framework to handle web interactions.",
         "fields": browser_model_fields,
+        "tab": "agent",
+    }
+
+    model_routing_section: SettingsSection = {
+        "id": "model_routing",
+        "title": "Model Routing Preferences",
+        "description": "Preferred model routing profile for specialized tasks.",
+        "fields": [
+            {
+                "id": "rj_custom_mode",
+                "title": "RJ custom mode",
+                "description": "When enabled, auto-applies RJ preferred model defaults and routing profile.",
+                "type": "switch",
+                "value": settings["rj_custom_mode"],
+            },
+            {
+                "id": "model_routing_primary",
+                "title": "Primary reasoning model",
+                "description": "Preferred main model for core chat/reasoning tasks.",
+                "type": "text",
+                "value": settings["model_routing_primary"],
+            },
+            {
+                "id": "model_routing_image",
+                "title": "Image generation model",
+                "description": "Preferred model for image generation tasks when supported by active tools/integrations.",
+                "type": "text",
+                "value": settings["model_routing_image"],
+            },
+            {
+                "id": "model_routing_video",
+                "title": "Video generation model",
+                "description": "Preferred model for video generation tasks when supported by active tools/integrations.",
+                "type": "text",
+                "value": settings["model_routing_video"],
+            },
+            {
+                "id": "model_routing_policy",
+                "title": "Routing policy",
+                "description": "General strategy for selecting best-fit models per task.",
+                "type": "textarea",
+                "value": settings["model_routing_policy"],
+            },
+        ],
         "tab": "agent",
     }
 
@@ -848,6 +898,7 @@ def convert_out(settings: Settings) -> SettingsOutput:
             chat_model_section,
             util_model_section,
             browser_model_section,
+            model_routing_section,
             embed_model_section,
             speech_section,
             api_keys_section,
@@ -935,10 +986,38 @@ def normalize_settings(settings: Settings) -> Settings:
             except (ValueError, TypeError):
                 copy[key] = value  # make default instead
 
+    _apply_rj_custom_mode(copy)
+
     # mcp server token is set automatically
     copy["mcp_server_token"] = create_auth_token()
 
     return copy
+
+
+
+
+def _apply_rj_custom_mode(copy: Settings):
+    if not copy.get("rj_custom_mode", False):
+        return
+
+    from models import ModelProvider
+
+    # Force preferred RJ defaults when toggle is enabled
+    copy["chat_model_provider"] = ModelProvider.GEMINI.name
+    copy["chat_model_name"] = "gemini-3.1-pro"
+    copy["util_model_provider"] = ModelProvider.GEMINI.name
+    copy["util_model_name"] = "gemini-3.1-flash"
+    copy["browser_model_provider"] = ModelProvider.GEMINI.name
+    copy["browser_model_name"] = "gemini-3.1-pro"
+
+    copy["model_routing_primary"] = "gemini-3.1-pro"
+    copy["model_routing_image"] = "nano-banana-pro-2"
+    copy["model_routing_video"] = "veo"
+    copy["model_routing_policy"] = (
+        "Route by task quality: use primary for reasoning/chat, image model for image generation, "
+        "video model for video generation, and fallback to the best available provider/model "
+        "for each task when specialized models are unavailable."
+    )
 
 
 def _adjust_to_version(settings: Settings, default: Settings):
@@ -994,8 +1073,8 @@ def get_default_settings() -> Settings:
 
     return Settings(
         version=_get_version(),
-        chat_model_provider=ModelProvider.OPENROUTER.name,
-        chat_model_name="openai/gpt-4.1",
+        chat_model_provider=ModelProvider.GEMINI.name,
+        chat_model_name="gemini-3.1-pro",
         chat_model_api_base="",
         chat_model_kwargs={"temperature": "0"},
         chat_model_ctx_length=100000,
@@ -1004,8 +1083,8 @@ def get_default_settings() -> Settings:
         chat_model_rl_requests=0,
         chat_model_rl_input=0,
         chat_model_rl_output=0,
-        util_model_provider=ModelProvider.OPENROUTER.name,
-        util_model_name="openai/gpt-4.1-nano",
+        util_model_provider=ModelProvider.GEMINI.name,
+        util_model_name="gemini-3.1-flash",
         util_model_api_base="",
         util_model_ctx_length=100000,
         util_model_ctx_input=0.7,
@@ -1019,11 +1098,23 @@ def get_default_settings() -> Settings:
         embed_model_kwargs={},
         embed_model_rl_requests=0,
         embed_model_rl_input=0,
-        browser_model_provider=ModelProvider.OPENROUTER.name,
-        browser_model_name="openai/gpt-4.1",
+        browser_model_provider=ModelProvider.GEMINI.name,
+        browser_model_name="gemini-3.1-pro",
         browser_model_api_base="",
         browser_model_vision=True,
         browser_model_kwargs={"temperature": "0"},
+        # model routing preferences (instructional metadata for orchestration and docs)
+        # these do not execute image/video generation by themselves; they define preferred providers
+        # for compatible tools and external integrations (e.g., MCP servers / custom extensions).
+        model_routing_primary="gemini-3.1-pro",
+        model_routing_image="nano-banana-pro-2",
+        model_routing_video="veo",
+        model_routing_policy=(
+            "Route by task quality: use primary for reasoning/chat, image model for image generation, "
+            "video model for video generation, and fallback to the best available provider/model "
+            "for each task when specialized models are unavailable."
+        ),
+        rj_custom_mode=True,
         api_keys={},
         auth_login="",
         auth_password="",
